@@ -1,0 +1,54 @@
+MPX;Microsoft Project for Windows;4.0;ANSI
+10;€;2;2;.;,
+11;2;0;1;8,00;40,00;10,00 €/h;15,00 €/h;1;0
+12;1;1;480;.;:;;;9;9
+20;Standard;0;1;1;1;1;1;1
+25;1
+25;2;08:00;12:00;13:00;17:00
+25;3;08:00;12:00;13:00;17:00
+25;4;08:00;12:00;13:00;17:00
+25;5;08:00;12:00;13:00;17:00
+25;6;08:00;12:00;13:00;17:00
+25;7;08:00;12:00;13:00;17:00
+30;Project1;;;Standard;Mo 29.04.19;Di 29.10.19;0;Mo 06.05.19;;0,00 €;0,00 €;0,00 €;0h;0h;0h;0%;0t;0t;0t;0%;;;;;0t;0t
+60;Name;PSP-Code;Gliederungsebene;Kosten;Dauer;Aktuelle Dauer;Verbleibende Dauer;% Abgeschlossen;Anfang;Ende;Vorgänger;Fest;Meilenstein;Nr.;Einschränkungsart;Priorität;Einmalige Nr.;Gliederungsnummer;Sammelvorgang
+61;1;2;3;30;40;42;43;44;50;51;70;80;81;90;91;95;98;99;120
+70;;0;0;;184t;;;;Mo 29.04.19;Di 29.10.19;;Nein;;0;So früh wie möglich;;0;0
+70;Konzeptentwicklung;1;1;0,00 €;125t;0t;125t;0%;Mo 29.04.19;Fr 20.09.19;;Nein;Nein;1;So früh wie möglich;Mittel;200;1;Ja
+70;Start der Masterarbeit;1.1;2;0,00 €;0t;0t;0t;0%;Mo 29.04.19;Mo 29.04.19;;Nein;Ja;2;So früh wie möglich;Mittel;6;1.1
+70;Definitionsphase;1.2;2;0,00 €;22t;0t;22t;0%;Mo 29.04.19;Do 23.05.19;;Nein;Nein;3;So früh wie möglich;Mittel;25;1.2;Ja
+70;Anforderungen analysieren und Pflichtenheft erstellen;1.2.1;3;0,00 €;9t;0t;9t;0%;Mo 29.04.19;Mi 08.05.19;2;Nein;Nein;4;So früh wie möglich;Mittel;26;1.2.1;Ja
+70;Pflichtenheft erstellen;1.2.1.1;4;0,00 €;9t;0t;9t;0%;Mo 29.04.19;Mi 08.05.19;2;Nein;Nein;5;So früh wie möglich;Mittel;27;1.2.1.1
+70;Pflichtenheft- und Projektplan-Review;1.2.2;3;0,00 €;0t;0t;0t;0%;Do 09.05.19;Do 09.05.19;5;Nein;Ja;6;So früh wie möglich;Mittel;28;1.2.2
+70;Literaturrecherche;1.2.3;3;0,00 €;12t;0t;12t;0%;Fr 10.05.19;Do 23.05.19;6;Nein;Nein;7;So früh wie möglich;Mittel;29;1.2.3;Ja
+70;Literaturrecherche Deep Learning;1.2.3.1;4;0,00 €;2t;0t;2t;0%;Fr 10.05.19;Sa 11.05.19;;Nein;Nein;8;So früh wie möglich;Mittel;36;1.2.3.1
+70;Literaturrecherche Continual&Distributed Learning;1.2.3.2;4;0,00 €;5t;0t;5t;0%;Mo 13.05.19;Fr 17.05.19;8;Nein;Nein;9;So früh wie möglich;Mittel;46;1.2.3.2
+70;Analyse L DNN A;1.2.3.3;4;0,00 €;5t;0t;5t;0%;Sa 18.05.19;Do 23.05.19;9;Nein;Nein;10;So früh wie möglich;Mittel;54;1.2.3.3
+70;Definitions-Review;1.2.4;3;0,00 €;0t;0t;0t;0%;Fr 24.05.19;Fr 24.05.19;7;Nein;Ja;11;So früh wie möglich;Mittel;55;1.2.4
+70;Urlaub;1.3;2;0,00 €;6t;0t;6t;0%;Mo 17.06.19;Sa 22.06.19;15;Nein;Nein;12;So früh wie möglich;Mittel;83;1.3
+70;Konzeptionsphase;1.4;2;0,00 €;34t;0t;34t;0%;Sa 25.05.19;Mi 03.07.19;11;Nein;Nein;13;So früh wie möglich;Mittel;57;1.4;Ja
+70;Konzeption Modellarchitekturen der DNNs;1.4.1;3;0,00 €;12t;0t;12t;0%;Sa 25.05.19;Fr 07.06.19;;Nein;Nein;14;So früh wie möglich;Mittel;61;1.4.1
+70;Anschauliche Konzeption des Lifelong DNN Algorithmus;1.4.2;3;0,00 €;7t;0t;7t;0%;Sa 08.06.19;Sa 15.06.19;14;Nein;Nein;15;So früh wie möglich;Mittel;65;1.4.2
+70;Konzeption der Experimente zur Evaluierung;1.4.3;3;0,00 €;9t;0t;9t;0%;Mo 24.06.19;Mi 03.07.19;12;Nein;Nein;16;So früh wie möglich;Mittel;67;1.4.3
+70;Entwurfs-Review;1.4.4;3;0,00 €;0t;0t;0t;0%;Do 04.07.19;Do 04.07.19;16;Nein;Ja;17;So früh wie möglich;Mittel;73;1.4.4
+70;Prototypingphase;1.5;2;0,00 €;67t;0t;67t;0%;Fr 05.07.19;Fr 20.09.19;17;Nein;Nein;18;So früh wie möglich;Mittel;113;1.5;Ja
+70;Implementierung und Inbetriebnahme;1.5.1;3;0,00 €;26t;0t;26t;0%;Fr 05.07.19;Sa 03.08.19;;Nein;Nein;19;So früh wie möglich;Mittel;120;1.5.1
+70;Evaluierung und Bewertung;1.5.2;3;0,00 €;17t;0t;17t;0%;Mo 05.08.19;Fr 23.08.19;19;Nein;Nein;20;So früh wie möglich;Mittel;124;1.5.2
+70;Prototyping- und Abnahme-Review;1.5.3;3;0,00 €;0t;0t;0t;0%;Sa 24.08.19;Sa 24.08.19;20;Nein;Ja;21;So früh wie möglich;Mittel;130;1.5.3
+70;Optional: Aufbau Demonstrator;1.5.4;3;0,00 €;24t;0t;24t;0%;Sa 24.08.19;Fr 20.09.19;20;Nein;Nein;22;So früh wie möglich;Mittel;125;1.5.4
+70;Prototyping- und Abnahme-Review (Demonstrator);1.5.5;3;0,00 €;0t;0t;0t;0%;Sa 21.09.19;Sa 21.09.19;22;Nein;Ja;23;So früh wie möglich;Mittel;134;1.5.5
+70;Projektmanagement;2;1;0,00 €;157t;0t;157t;0%;Mo 29.04.19;Mo 28.10.19;2;Nein;Nein;24;So früh wie möglich;Mittel;155;2;Ja
+70;Projektplanung;2.1;2;0,00 €;8t;0t;8t;0%;Mo 29.04.19;Di 07.05.19;;Nein;Nein;25;So früh wie möglich;Mittel;158;2.1
+70;Projektplan;2.2;2;0,00 €;0t;0t;0t;0%;Mi 08.05.19;Mi 08.05.19;25;Nein;Ja;26;So früh wie möglich;Mittel;161;2.2
+70;Projektkontrolle;2.3;2;0,00 €;118t;0t;118t;0%;Mi 08.05.19;Sa 21.09.19;26;Nein;Nein;27;So früh wie möglich;Mittel;165;2.3
+70;Projektabschluß;2.4;2;0,00 €;4t;0t;4t;0%;Sa 21.09.19;Mi 25.09.19;23;Nein;Nein;28;So früh wie möglich;Mittel;170;2.4
+70;Vortrag vorbereiten;2.5;2;0,00 €;5t;0t;5t;0%;Do 26.09.19;Di 01.10.19;28;Nein;Nein;29;So früh wie möglich;Mittel;177;2.5
+70;Vortrag;2.6;2;0,00 €;0t;0t;0t;0%;Mi 02.10.19;Mi 02.10.19;29;Nein;Ja;30;So früh wie möglich;Mittel;185;2.6
+70;Ausarbeitung;2.7;2;0,00 €;13t;0t;13t;0%;Mi 02.10.19;Mi 16.10.19;30;Nein;Nein;31;So früh wie möglich;Mittel;189;2.7
+70;Puffer;2.8;2;0,00 €;10t;0t;10t;0%;Do 17.10.19;Mo 28.10.19;31;Nein;Nein;32;So früh wie möglich;Mittel;194;2.8
+70;Ende Masterarbeit;2.9;2;0,00 €;0t;0t;0t;0%;Di 29.10.19;Di 29.10.19;32;Nein;Ja;33;So früh wie möglich;Mittel;199;2.9
+70;Qualitätssicherung;3;1;0,00 €;158t;0t;158t;0%;Mo 29.04.19;Di 29.10.19;2;Nein;Nein;34;So früh wie möglich;Mittel;139;3;Ja
+70;Prozessprüfung;3.1;2;0,00 €;158t;0t;158t;0%;Mo 29.04.19;Di 29.10.19;;Nein;Nein;35;So früh wie möglich;Mittel;143;3.1
+70;Konfigurationsmanagement;4;1;0,00 €;158t;0t;158t;0%;Mo 29.04.19;Di 29.10.19;2;Nein;Nein;36;So früh wie möglich;Mittel;146;4;Ja
+70;Konfigurationsverwaltung;4.1;2;0,00 €;158t;0t;158t;0%;Mo 29.04.19;Di 29.10.19;;Nein;Nein;37;So früh wie möglich;Mittel;149;4.1
+70;Datensicherung;4.2;2;0,00 €;158t;0t;158t;0%;Mo 29.04.19;Di 29.10.19;;Nein;Nein;38;So früh wie möglich;Mittel;151;4.2
