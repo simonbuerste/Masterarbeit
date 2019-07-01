@@ -4,3 +4,4 @@ Vorlagen/
 Praesentationen/
 Code/.idea/
 Code/venv/
+*.pyc
