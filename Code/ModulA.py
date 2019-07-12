@@ -25,6 +25,6 @@ def modul_a(image_size=None):
     modul_a.trainable = False
 
     # Write a summary of Modul A
-    modul_a.summary()
+    # modul_a.summary()
 
     return modul_a

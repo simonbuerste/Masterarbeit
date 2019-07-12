@@ -12,7 +12,7 @@ class FuzzyARTMAP(object):
     A supervised version of FuzzyART
     """
 
-    def __init__(self, alpha=1.0, gamma=0.01, rho=0.5, epsilon=-0.0001):
+    def __init__(self, alpha=1.0, gamma=0.01, rho=0.5, epsilon=-0.0001, n_classes=0):
         """
         :param alpha: learning rate [0,1]
         :param gamma: regularization term > 0
@@ -27,7 +27,8 @@ class FuzzyARTMAP(object):
 
         self.w = None
         self.out_w = None
-        self.n_classes = 0
+        self.n_classes = n_classes
+        self.true_pos_train = 0
 
     def _init_weights(self, x, y):
         self.w = np.atleast_2d(x)
@@ -46,21 +47,27 @@ class FuzzyARTMAP(object):
         # fuzzy_norm = l1_norm(fuzzy_weights)
         # scores = fuzzy_norm + (1 - self.gamma) * (l1_norm(x) + l1_norm(self.w))
         # norms = fuzzy_norm / l1_norm(x)
-        w_norm = l1_norm(self.w)
-        x_normed = l1_norm(x)
-        activations = np.dot(self.w, x)
-        activations = activations/(w_norm*x_normed)
 
-        threshold = activations >= _rho
+        w_norm = np.diag(np.sqrt(np.dot(self.w, np.transpose(self.w))))
+        x_normed = np.sqrt(np.dot(x, x))
+        scores = np.dot(self.w, x)
+        norms = scores/(w_norm*x_normed + self.gamma)
+
+        threshold = norms >= _rho
         while not np.all(threshold == False):
-            y_ = np.argmax(activations * threshold.astype(int))
+            y_ = np.argmax(norms)  # * threshold.astype(int))
 
             if y is None or self.out_w[y_, y] == 1:
+                self.true_pos_train += 1
                 return y_
-            # else:
-            #     _rho = activations[y_] + self.epsilon
-            #     activations[y_] = 0
-            #     threshold = activations >= _rho
+            # elif 1 in self.out_w[:, y]:
+            #     # convert the true class label to the category index inside ARTMAP
+            #     category_idx = int(np.where(self.out_w[:, y] == 1)[0])
+            #     return category_idx
+            else:
+                # _rho = norms[y_] + self.epsilon
+                norms[y_] = 0
+                threshold = norms >= _rho
         return -1
 
     def train(self, x, y, epochs=1):
@@ -71,7 +78,8 @@ class FuzzyARTMAP(object):
         :return: self
         """
         samples = x
-        self.n_classes = len(set(y))
+        if self.n_classes == 0:
+            self.n_classes = len(set(y))
 
         if self.w is None:
             self._init_weights(samples[0], y[0])
@@ -79,6 +87,7 @@ class FuzzyARTMAP(object):
         idx = np.arange(len(samples), dtype=np.uint32)
 
         for epoch in range(epochs):
+            self.true_pos_train = 0
             idx = np.random.permutation(idx)
             for sample, label in zip(samples[idx], y[idx]):
                 category = self._match_category(sample, label)
@@ -88,7 +97,7 @@ class FuzzyARTMAP(object):
                     w = self.w[category]
                     self.w[category] = (self.alpha * sample + self.beta * w)
 
-            print("Epoch {} finished".format(epoch))
+            print("Training Accuracy: {:.4f}".format(self.true_pos_train/len(samples)))
         return self
 
     def test(self, x):
