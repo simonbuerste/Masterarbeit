@@ -12,7 +12,7 @@ class FuzzyARTMAP(object):
     A supervised version of FuzzyART
     """
 
-    def __init__(self, alpha=1.0, gamma=0.01, rho=0.5, epsilon=-0.0001, n_classes=0):
+    def __init__(self, alpha=1.0, gamma=0.01, rho=0.55, epsilon=-0.0001, n_classes=0, s=1.2):
         """
         :param alpha: learning rate [0,1]
         :param gamma: regularization term > 0
@@ -24,6 +24,7 @@ class FuzzyARTMAP(object):
         self.gamma = gamma  # choice parameter
         self.rho = rho  # vigilance
         self.epsilon = epsilon  # match tracking
+        self.s = s  # Nothing I Know Concept Parameter
 
         self.w = None
         self.out_w = None
@@ -42,6 +43,7 @@ class FuzzyARTMAP(object):
 
     def _match_category(self, x, y=None):
         _rho = self.rho
+        _s = self.s
 
         # fuzzy_weights = np.minimum(x, self.w)
         # fuzzy_norm = l1_norm(fuzzy_weights)
@@ -53,7 +55,12 @@ class FuzzyARTMAP(object):
         scores = np.dot(self.w, x)
         norms = scores/(w_norm*x_normed + self.gamma)
 
-        threshold = norms >= _rho
+        if (len(norms) > 1) and (y is None):
+            rho = _s * np.mean(norms)
+        else:
+            rho = _rho
+        threshold = norms >= rho
+
         while not np.all(threshold == False):
             y_ = np.argmax(norms)  # * threshold.astype(int))
 
@@ -66,6 +73,7 @@ class FuzzyARTMAP(object):
             #     return category_idx
             else:
                 # _rho = norms[y_] + self.epsilon
+                # self.rho = _rho + 0.01
                 norms[y_] = 0
                 threshold = norms >= _rho
         return -1
@@ -110,5 +118,28 @@ class FuzzyARTMAP(object):
         labels = np.zeros(len(samples))
         for i, sample in enumerate(samples):
             category = self._match_category(sample)
-            labels[i] = np.argmax(self.out_w[category])
+            if category != -1:
+                labels[i] = np.argmax(self.out_w[category])
+            else:
+                print("{} tes Sample der Testdaten".format(i))
+                label = int(input("Kategorie unbekannt. Geben Sie die Kategorie ein: "))
+                self._add_category(sample, label)
+                labels[i] = category
         return labels
+
+    def consolidation(self):
+        """
+
+        :return: Consolidated Representation Layer. Weights from equal Classes are merged
+        """
+        unique_classes = np.unique(self.out_w, axis=0)
+        out_w_consolidated = np.zeros_like(unique_classes, dtype=int)
+        w_consolidated = np.zeros((unique_classes.shape[0], self.w.shape[1]))
+        for i in range(self.n_classes):
+            idx = np.argwhere(self.out_w[:, i] == 1)
+            if idx.size != 0:
+                w_consolidated[i, :] = np.mean(self.w[idx, :], axis=0)
+                out_w_consolidated[i, i] = 1
+
+        self.w = w_consolidated
+        self.out_w = out_w_consolidated
