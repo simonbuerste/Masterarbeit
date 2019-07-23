@@ -1,6 +1,6 @@
 """
-This file is the Main File for executing the Lifelong DNN Algorithm
-Pipeline is set up here and all relevant Parameters can be set here
+This file is the Main File for executing the Lifelong DNN Algorithm.
+The Pipeline is set up here and all relevant Parameters can be set here
 """
 
 from Data_Input import input_fn
@@ -13,11 +13,11 @@ from Helper import data_separation
 # Parameters for the Pipeline are set here
 no_classes = 10
 no_groups = 10
-train_img_per_class = 5
-test_img_per_class = 10
+train_img_per_class = 50
+test_img_per_class = 100
 
 # Input Function is called which provides the training and test data for the desired Dataset
-data_train, data_test = input_fn(dataset="mnist", visu=True)
+data_train, data_test = input_fn(dataset="mnist", visu=False)
 
 # The Feature Extraction Module A is called and created/downloaded with the corresponding image size
 modulA = modul_a(image_size=96)
