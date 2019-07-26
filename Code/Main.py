@@ -29,11 +29,11 @@ feature_list_train, label_list_train, feature_list_test, label_list_test = data_
                                                                                            data_test,
                                                                                            test_img_per_class)
 
-# Module B is initialized with the corresponding parameters
-modulB = FuzzyARTMAP(alpha=0.25, rho=0.65, n_classes=no_classes, s=1.05)
 
-# The Training and Testing of the L DNN Algorithm takes place according to the previously defined and created
-# Modules and Data.
+# Module B is initialized with the corresponding parameters
+modulB = FuzzyARTMAP(alpha=0.25, rho=0.65, n_classes=no_classes, s=1.05, epsilon=0.001)
+
+# Training and Testing of the L DNN Algorithm according to the previously defined and created Modules and Data.
 label_list_test_merged, pred = continual_learning_fun(modulB, no_classes, no_groups, feature_list_train, label_list_train,
                                                       feature_list_test, label_list_test)
 

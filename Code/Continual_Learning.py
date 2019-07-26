@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 
 def continual_learning_fun(modul_b, no_classes, no_groups, feature_list_train, label_list_train, feature_list_test,
@@ -29,7 +30,10 @@ def continual_learning_fun(modul_b, no_classes, no_groups, feature_list_train, l
 
     feature_list_test_merged = []
     label_list_test_merged = []
-    for i in range(no_groups):
+    classes = np.arange(0, 10)
+    random.shuffle(classes)
+    print(classes)
+    for i in range(no_groups):  # - 1, -1, -1):
         print("------ Training Group {} of {} ------".format(int(i+1), no_groups))
 
         group_size = int(no_classes/no_groups)
@@ -38,11 +42,11 @@ def continual_learning_fun(modul_b, no_classes, no_groups, feature_list_train, l
         tmp_features = []
         tmp_labels = []
         for j in range(idx, (idx+group_size)):
-            tmp_features = tmp_features + feature_list_train[j]
-            tmp_labels = tmp_labels + label_list_train[j]
+            tmp_features = tmp_features + feature_list_train[classes[j]]
+            tmp_labels = tmp_labels + label_list_train[classes[j]]
 
-            feature_list_test_merged = feature_list_test_merged + feature_list_test[j]
-            label_list_test_merged = label_list_test_merged + label_list_test[j]
+            feature_list_test_merged = feature_list_test_merged + feature_list_test[classes[j]]
+            label_list_test_merged = label_list_test_merged + label_list_test[classes[j]]
 
         if i != 10:
             modul_b.train(np.array(tmp_features), np.asarray(tmp_labels)[:, 0], epochs=1)

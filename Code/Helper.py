@@ -73,7 +73,8 @@ def data_separation(modul_a, no_classes, data_train, train_img_per_class, data_t
         if i[label_scalar] < train_img_per_class:
             features = modul_a.predict(img, steps=1)
             features_np = np.array(features)
-            feature_list_train[label_scalar].append(features_np.flatten())
+            features_np_normed = features_np/np.sum(features_np)
+            feature_list_train[label_scalar].append(features_np_normed.flatten())
             label_list_train[label_scalar].append(label)
             i[label_scalar] += 1
 
@@ -88,7 +89,8 @@ def data_separation(modul_a, no_classes, data_train, train_img_per_class, data_t
         if i[label_scalar] < test_img_per_class:
             features = modul_a.predict(img, steps=1)
             features_np = np.array(features)
-            feature_list_test[label_scalar].append(features_np.flatten())
+            features_np_normed = features_np/np.sum(features_np)
+            feature_list_test[label_scalar].append(features_np_normed.flatten())
             label_list_test[label_scalar].append(label)
             i[label_scalar] += 1
 

@@ -12,10 +12,10 @@ class FuzzyARTMAP(object):
     A supervised version of FuzzyART
     """
 
-    def __init__(self, alpha=1.0, gamma=0.01, rho=0.55, epsilon=-0.0001, n_classes=0, s=1.2):
+    def __init__(self, alpha=0.25, gamma=0.01, rho=0.65, epsilon=0.001, n_classes=0, s=1.2):
         """
         :param alpha: learning rate [0,1]
-        :param gamma: regularization term > 0
+        :param gamma: choice parameter > 0
         :param rho: vigilance parameter [0,1]
         :param epsilon: match tracking [-1,1]
         """
@@ -45,24 +45,25 @@ class FuzzyARTMAP(object):
         _rho = self.rho
         _s = self.s
 
-        # fuzzy_weights = np.minimum(x, self.w)
-        # fuzzy_norm = l1_norm(fuzzy_weights)
-        # scores = fuzzy_norm + (1 - self.gamma) * (l1_norm(x) + l1_norm(self.w))
+        fuzzy_weights = np.minimum(x, self.w)
+        fuzzy_norm = l1_norm(fuzzy_weights)
+        scores = fuzzy_norm / (self.gamma + l1_norm(self.w))
         # norms = fuzzy_norm / l1_norm(x)
 
-        w_norm = np.diag(np.sqrt(np.dot(self.w, np.transpose(self.w))))
+        w_normed = np.diag(np.sqrt(np.dot(self.w, np.transpose(self.w))))
         x_normed = np.sqrt(np.dot(x, x))
-        scores = np.dot(self.w, x)
-        norms = scores/(w_norm*x_normed + self.gamma)
+        dot_product = np.dot(self.w, x)
+        norms = dot_product/(w_normed*x_normed)
 
         if (len(norms) > 1) and (y is None):
-            rho = _s * np.mean(norms)
+            rho = np.minimum(_s * np.mean(norms), _s * _rho)
         else:
             rho = _rho
-        threshold = norms >= rho
+
+        threshold = norms > rho
 
         while not np.all(threshold == False):
-            y_ = np.argmax(norms)  # * threshold.astype(int))
+            y_ = np.argmax(scores * threshold.astype(int))
 
             if y is None or self.out_w[y_, y] == 1:
                 self.true_pos_train += 1
@@ -72,10 +73,10 @@ class FuzzyARTMAP(object):
             #     category_idx = int(np.where(self.out_w[:, y] == 1)[0])
             #     return category_idx
             else:
-                # _rho = norms[y_] + self.epsilon
+                rho = norms[y_] + self.epsilon
                 # self.rho = _rho + 0.01
                 norms[y_] = 0
-                threshold = norms >= _rho
+                threshold = norms > rho
         return -1
 
     def train(self, x, y, epochs=1):
@@ -103,7 +104,8 @@ class FuzzyARTMAP(object):
                     self._add_category(sample, label)
                 else:
                     w = self.w[category]
-                    self.w[category] = (self.alpha * sample + self.beta * w)
+                    # self.w[category] = self.alpha * np.minimum(sample, w) + self.beta * w
+                    self.w[category] = self.alpha * sample + self.beta * w
 
             print("Training Accuracy: {:.4f}".format(self.true_pos_train/len(samples)))
         return self
