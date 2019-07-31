@@ -145,3 +145,11 @@ class FuzzyARTMAP(object):
 
         self.w = w_consolidated
         self.out_w = out_w_consolidated
+
+    def melding(self, modul_b_additional):
+        """
+
+        :return:
+        """
+        self.w = np.append(self.w, modul_b_additional.w, axis=0)
+        self.out_w = np.append(self.out_w, modul_b_additional.out_w, axis=0)

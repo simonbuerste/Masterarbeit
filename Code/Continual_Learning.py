@@ -59,4 +59,8 @@ def continual_learning_fun(modul_b, no_classes, no_groups, feature_list_train, l
         true_pos = np.sum(np.asarray(label_list_test_merged)[:, 0] == pred)
         print("Test Accuracy: {:.4f}".format(true_pos / len(pred)))
 
-    return label_list_test_merged, pred
+    tmp_list_1 = [[] for _ in range(1)]
+    tmp_list_2 = [[] for _ in range(1)]
+    tmp_list_1[0] = label_list_test_merged
+    tmp_list_2[0] = pred
+    return tmp_list_1, tmp_list_2

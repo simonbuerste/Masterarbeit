@@ -18,24 +18,29 @@ def confusion_matrix_plot(label_list_test_merged, pred):
     # Returns
         Nothing
     """
-    cm = confusion_matrix(y_true=np.asarray(label_list_test_merged), y_pred=pred)
-    cm = cm / cm.sum(axis=1)[:, None]
 
-    fig, ax = plt.subplots()
-    im = ax.imshow(cm)
-    ax.figure.colorbar(im, ax=ax)
-    ax.set(xticks=np.arange(cm.shape[1]),
-           yticks=np.arange(cm.shape[0]),
-           title='Confusion Matrix of L DNN Algorithm')
+    for i in range(len(label_list_test_merged)):
+        cm = confusion_matrix(y_true=np.asarray(label_list_test_merged[i]), y_pred=pred[i])
+        cm = cm / cm.sum(axis=1)[:, None]
 
-    # Loop over data dimensions and create text annotations.
-    fmt = '.2f'
-    thresh = cm.mean()
-    for k in range(cm.shape[0]):
-        for j in range(cm.shape[1]):
-            ax.text(j, k, format(cm[k, j], fmt),
-                    ha="center", va="center",
-                    color="white")
+        fig, ax = plt.subplots()
+        im = ax.imshow(cm)
+        ax.figure.colorbar(im, ax=ax)
+        ax.set(xticks=np.arange(cm.shape[1]),
+               yticks=np.arange(cm.shape[0]),
+               xticklabels=np.unique(label_list_test_merged[i]),
+               yticklabels=np.unique(label_list_test_merged[i]),
+               title='Confusion Matrix of L DNN Algorithm for Index {}'.format(i))
+
+        # Loop over data dimensions and create text annotations.
+        fmt = '.2f'
+        thresh = cm.mean()
+        for k in range(cm.shape[0]):
+            for j in range(cm.shape[1]):
+                ax.text(j, k, format(cm[k, j], fmt),
+                        ha="center", va="center",
+                        color="white")
+        fig.tight_layout()
 
     plt.show()
 

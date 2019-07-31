@@ -7,14 +7,17 @@ from Data_Input import input_fn
 from ModulA import modul_a
 from FuzzyARTMAP import FuzzyARTMAP
 from Continual_Learning import continual_learning_fun
+from Distributed_Learning import distributed_learning_fun
 from Helper import confusion_matrix_plot
 from Helper import data_separation
 
 # Parameters for the Pipeline are set here
 no_classes = 10
 no_groups = 10
-train_img_per_class = 50
-test_img_per_class = 100
+train_img_per_class = 5
+test_img_per_class = 10
+no_edge_devices = 2
+test_case = "distributed"  # "continual"
 
 # Input Function is called which provides the training and test data for the desired Dataset
 data_train, data_test = input_fn(dataset="mnist", visu=False)
@@ -29,13 +32,20 @@ feature_list_train, label_list_train, feature_list_test, label_list_test = data_
                                                                                            data_test,
                                                                                            test_img_per_class)
 
-
 # Module B is initialized with the corresponding parameters
-modulB = FuzzyARTMAP(alpha=0.25, rho=0.65, n_classes=no_classes, s=1.05, epsilon=0.001)
+modulB = [[] for i in range(no_edge_devices)]
+for i in range(no_edge_devices):
+    modulB[i] = FuzzyARTMAP(alpha=0.25, rho=0.65, n_classes=no_classes, s=1.05, epsilon=0.001)
 
 # Training and Testing of the L DNN Algorithm according to the previously defined and created Modules and Data.
-label_list_test_merged, pred = continual_learning_fun(modulB, no_classes, no_groups, feature_list_train, label_list_train,
-                                                      feature_list_test, label_list_test)
-
+if test_case == "continual":
+    label_list_test_merged, pred = continual_learning_fun(modulB[0], no_classes, no_groups, feature_list_train,
+                                                          label_list_train, feature_list_test, label_list_test)
+elif test_case == "distributed":
+    label_list_test_merged, pred = distributed_learning_fun(modulB, no_classes, no_groups, feature_list_train,
+                                                            label_list_train, feature_list_test, label_list_test)
+else:
+    print("Test Case not available or wrongly written. Please choose between 'continual' or 'distributed'.")
+    exit()
 # For a final Evaluation a Confusion Matrix is plotted
 confusion_matrix_plot(label_list_test_merged, pred)
