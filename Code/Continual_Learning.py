@@ -8,17 +8,18 @@ def continual_learning_fun(modul_b, no_classes, no_groups, feature_list_train, l
     Incremental Class Learning is executed here. The classes are learned one after each other and testing happens
     on all previously learned classes
     # Arguments
-        :param modul_b: The created Module B which is in the L DNN Algorithm the incremental Classifier. Class Object
-                        with defined Functions and Parameters
-        :param no_classes: Number of classes in the dataset
-        :param no_groups: Number of Training Groups. Can be used if more classes should be trained together
-        :param feature_list_train: The extracted Features from training data separated by each class
-        :param label_list_train: The corresponding Labels to the training data
-        :param feature_list_test: The extracted Features from test data separated by each class
-        :param label_list_test: The corresponding Labels to the training data
+        :param modul_b:             The created Module B which is in the L DNN Algorithm the incremental Classifier.
+                                    Class Object with defined Functions and Parameters
+        :param no_classes:          Number of classes in the dataset
+        :param no_groups:           Number of Training Groups. Can be used if more classes should be trained together
+        :param feature_list_train:  The extracted Features from training data separated by each class
+        :param label_list_train:    The corresponding Labels to the training data
+        :param feature_list_test:   The extracted Features from test data separated by each class
+        :param label_list_test:     The corresponding Labels to the training data
     # Returns
-        label_list_test_merged: The merged List of Labels for the test data
-        pred: Predicted Labels from the Network --> Output of the L DNN Algorithm
+        label_list_test_merged:     The merged List of Labels for the test data
+        pred:                       Predicted Labels from the Network --> Output of the L DNN Algorithm
+        accuracy:                   Classification Accuracy for the different incremental Learning Steps
     """
     # for i in range(no_classes):
     #     if i == 0:
@@ -30,9 +31,11 @@ def continual_learning_fun(modul_b, no_classes, no_groups, feature_list_train, l
 
     feature_list_test_merged = []
     label_list_test_merged = []
+    accuracy = np.zeros((no_groups, 1))
     classes = np.arange(0, 10)
     random.shuffle(classes)
     print(classes)
+
     for i in range(no_groups):  # - 1, -1, -1):
         print("------ Training Group {} of {} ------".format(int(i+1), no_groups))
 
@@ -57,10 +60,11 @@ def continual_learning_fun(modul_b, no_classes, no_groups, feature_list_train, l
 
         pred = modul_b.test(np.array(feature_list_test_merged))
         true_pos = np.sum(np.asarray(label_list_test_merged)[:, 0] == pred)
-        print("Test Accuracy: {:.4f}".format(true_pos / len(pred)))
+        accuracy[i] = true_pos / len(pred)
+        print("Test Accuracy: {}".format(accuracy[i]))
 
     tmp_list_1 = [[] for _ in range(1)]
     tmp_list_2 = [[] for _ in range(1)]
     tmp_list_1[0] = label_list_test_merged
     tmp_list_2[0] = pred
-    return tmp_list_1, tmp_list_2
+    return tmp_list_1, tmp_list_2, accuracy

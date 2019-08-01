@@ -1,3 +1,4 @@
+import os
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import matplotlib.pyplot as plt
@@ -5,6 +6,43 @@ import matplotlib.pyplot as plt
 """
 The Data Input is handled here. All necessary steps for preparing the Data for the Network is done
 """
+
+
+def extract_fn(tfrecord):
+    """
+    In this function datasets which are stored in a .tfrecord file are extracted and a dataset is returned which can be
+    used further like any tf.dataset object
+    # Arguments
+        :param tfrecord:    TFRecord Dataset where all features are stored
+    # Return
+        image:              The extracted Image out of the TFRecord Dataset
+        label:              The extracted label corresponding to the image
+    """
+    # Extract features using the keys set during creation
+    features = {
+        'image':    tf.io.FixedLenFeature([], tf.string),
+        'label':    tf.io.FixedLenFeature([], tf.int64),
+        'height':   tf.io.FixedLenFeature([], tf.int64),
+        'width':    tf.io.FixedLenFeature([], tf.int64),
+        'depth':    tf.io.FixedLenFeature([], tf.int64)
+    }
+
+    # Extract the data record
+    sample = tf.io.parse_single_example(tfrecord, features)
+
+    # Decode image and shape from tfrecord
+    img_shape = tf.stack([sample['depth'], sample['height'], sample['width']])
+    image = tf.io.decode_raw(sample['image'], tf.uint8)
+    # reshape the image in "original Shape"
+    image = tf.reshape(image, img_shape)
+    # Transpose Image for tensorflow notation (heigth, width, num_channel)
+    image = tf.transpose(image, (1, 2, 0))
+    # Define new Size to resize the image
+    image = tf.image.resize(image, (64, 64))
+
+    label = sample['label']
+
+    return [image, label]
 
 
 def augmentation_fn(image, label):
@@ -41,8 +79,19 @@ def input_fn(dataset, visu):
         data_train: The Training Dataset containing all augmented Training Images and Labels
         data_test: The Test Dataset containing all augmented Test Images and Labels
     """
-    data_train = tfds.load(name=dataset, split=tfds.Split.TRAIN, as_supervised=True)
-    data_test = tfds.load(name=dataset, split=tfds.Split.TEST, as_supervised=True)
+    try:
+        data_train = tfds.load(name=dataset, split=tfds.Split.TRAIN, as_supervised=True)
+        data_test = tfds.load(name=dataset, split=tfds.Split.TEST, as_supervised=True)
+    except:
+        dataset_folder = 'C:/Users/simon/tensorflow_datasets'
+        filename_train = os.path.join(dataset_folder, dataset, 'train.tfrecords')
+        filename_test = os.path.join(dataset_folder, dataset, 'test.tfrecords')
+
+        data_train = tf.data.TFRecordDataset([filename_train])
+        data_train = data_train.map(extract_fn)
+
+        data_test = tf.data.TFRecordDataset([filename_test])
+        data_test = data_test.map(extract_fn)
 
     # For Visualization of before/after image with data augmentation
     if visu is True:
