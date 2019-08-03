@@ -3,6 +3,8 @@ This file is the Main File for executing the Lifelong DNN Algorithm.
 The Pipeline is set up here and all relevant Parameters can be set here
 """
 
+from pympler import asizeof
+
 from Data_Input import input_fn
 from ModulA import modul_a
 from FuzzyARTMAP import FuzzyARTMAP
@@ -17,8 +19,8 @@ no_classes = 10
 no_groups = 10
 train_img_per_class = 5
 test_img_per_class = 10
-no_edge_devices = 2
-test_case = "distributed"  # "continual"
+no_edge_devices = 1
+test_case = "continual"  # "distributed"
 
 # Input Function is called which provides the training and test data for the desired Dataset
 data_train, data_test = input_fn(dataset="imagenet10", visu=False)
@@ -45,7 +47,8 @@ if test_case == "continual":
                                                                     label_list_test)
 elif test_case == "distributed":
     label_list_test_merged, pred, accuracy = distributed_learning_fun(modulB, no_classes, no_groups, feature_list_train,
-                                                            label_list_train, feature_list_test, label_list_test)
+                                                                      label_list_train, feature_list_test,
+                                                                      label_list_test)
 else:
     print("Test Case not available or wrongly written. Please choose between 'continual' or 'distributed'.")
     exit()
@@ -53,3 +56,9 @@ else:
 # For a Evaluation Plots are generated
 confusion_matrix_plot(label_list_test_merged, pred)
 accuracy_plot(accuracy, no_classes, no_groups, no_edge_devices)
+
+# Get Memory Consumption of the modules
+mem_modulA = asizeof.asizeof(modulA)
+mem_modulB = asizeof.asizeof(modulB[0])
+print("Memory usage of Module A: {} KB".format(mem_modulA/1000))
+print("Memory usage of Module B: {} KB".format(mem_modulB/1000))

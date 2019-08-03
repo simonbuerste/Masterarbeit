@@ -1,7 +1,7 @@
 """
 File for summarizing all helper Functions used for the
-- Correct inputting of the Data
-- evaluation of the Performance
+- Separation of the Data depending on their classes
+- evaluation and visualization of the Performance
 """
 
 import numpy as np
@@ -65,10 +65,10 @@ def data_separation(modul_a, no_classes, data_train, train_img_per_class, data_t
     """
 
     # To seperate the data correct, create a nested list with seperat lists for every class
-    feature_list_train = [[] for j in range(no_classes)]
-    feature_list_test = [[] for j in range(no_classes)]
-    label_list_train = [[] for j in range(no_classes)]
-    label_list_test = [[] for j in range(no_classes)]
+    feature_list_train = [[] for _ in range(no_classes)]
+    feature_list_test = [[] for _ in range(no_classes)]
+    label_list_train = [[] for _ in range(no_classes)]
+    label_list_test = [[] for _ in range(no_classes)]
     i = np.zeros((no_classes,), dtype=int)
 
     # Loop over all training data (or until break condition is fullfilled)

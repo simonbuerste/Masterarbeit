@@ -56,14 +56,18 @@ def augmentation_fn(image, label):
         image: Returns the augmented image
         label: Returns the label
     """
+    # Convert image to float and normalize it into [0, 1] Range
     image = tf.cast(image, tf.float32)
     image = image/255
-
     img_shape = image.shape
+
+    # If just one channel is available, convert to RGB Image (Necessary for usage of pre-trained MobileNet
     if img_shape[2] == 1:
         image = tf.image.grayscale_to_rgb(image)
+
+    # If Image Size is smaller than 96, resize the image (Necessary since smallest pre-trained Weights are trained for
+    # 96x96x3 Images
     if img_shape[0] < 96:
-        # Resize the image if required
         image = tf.image.resize(image, (96, 96))
     return image, label
 
@@ -93,7 +97,7 @@ def input_fn(dataset, visu):
         data_test = tf.data.TFRecordDataset([filename_test])
         data_test = data_test.map(extract_fn)
 
-    # For Visualization of before/after image with data augmentation
+    # For Visualization of image before/after data augmentation
     if visu is True:
         example, = data_train.take(1)
         image, label = example[0], example[1]
@@ -117,7 +121,7 @@ def input_fn(dataset, visu):
         plt.show()
         print("Label: %d" % label.numpy())
 
-    data_train = data_train.repeat().shuffle(1024).batch(1)
+    data_train = data_train.repeat().shuffle(128).batch(1)
     data_test = data_test.batch(1)
 
     return data_train, data_test

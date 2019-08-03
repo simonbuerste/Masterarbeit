@@ -2,11 +2,14 @@ import numpy as np
 import random
 import copy
 
+"""
+Function for the distributed incremental class learning is implemented here
+"""
+
 
 def distributed_learning_fun(modul_b, no_classes, no_groups, feature_list_train, label_list_train, feature_list_test,
                              label_list_test):
     """
-
     Distributed (incremental) Class Learning is executed here. The classes are learned one after each other at the
     different "devices" (here: Different instances of the FuzzyARTMAP class) and testing on all previously learned
     classes is done.
