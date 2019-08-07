@@ -26,6 +26,7 @@ def distributed_learning_fun(modul_b, no_classes, no_groups, feature_list_train,
         label_list_test_merged:     The merged List of Labels for the test data
         pred:                       Predicted Labels from the Network --> Output of the L DNN Algorithm
         accuracy:                   Classification Accuracy for the different incremental Learning Steps
+        accuracy_melded:            The Accuracy of the melded Networks
     """
 
     # Create Lists for Test Data and Prediction for defined number of Devices (Modules) plus one melded Module
@@ -104,6 +105,7 @@ def distributed_learning_fun(modul_b, no_classes, no_groups, feature_list_train,
 
             pred[-1] = modul_b[-1].test(np.array(feature_list_test_merged[-1]))
             true_pos = np.sum(np.asarray(label_list_test_merged[-1])[:, 0] == pred[-1])
-            print("Test Accuracy of melded Networks: {:.4f}".format(true_pos / len(pred[-1])))
+            accuracy_melded = true_pos / len(pred[-1])
+            print("Test Accuracy of melded Networks: {:.4f}".format(accuracy_melded))
 
-    return label_list_test_merged, pred, accuracy
+    return label_list_test_merged, pred, accuracy, accuracy_melded

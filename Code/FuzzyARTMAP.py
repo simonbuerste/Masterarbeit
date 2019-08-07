@@ -16,13 +16,15 @@ class FuzzyARTMAP(object):
 
     def __init__(self, alpha=0.25, gamma=0.01, rho=0.65, epsilon=0.001, n_classes=0, s=1.2):
         """
+
         :param alpha: learning rate [0,1]
         :param gamma: choice parameter > 0
         :param rho: vigilance parameter [0,1]
         :param epsilon: match tracking [-1,1]
+        :param n_classes: Number of Classes (Necessary for the Category Layer)
+        :param s: Parameter for thresholding with "Nothing I Know"-Concept
         """
         self.alpha = alpha  # learning rate
-        self.beta = 1 - alpha
         self.gamma = gamma  # choice parameter
         self.rho = rho  # vigilance
         self.epsilon = epsilon  # match tracking
@@ -113,8 +115,8 @@ class FuzzyARTMAP(object):
                 else:
                     # If Category is known and threshold is reached, adapt current representation with sample
                     w = self.w[category]
-                    # self.w[category] = self.alpha * np.minimum(sample, w) + self.beta * w
-                    self.w[category] = self.alpha * sample + self.beta * w
+                    # self.w[category] = self.alpha * np.minimum(sample, w) + (1 - self.alpha) * w
+                    self.w[category] = self.alpha * sample + (1 - self.alpha) * w
 
             print("Training Accuracy: {:.4f}".format(self.true_pos_train/len(samples)))
         return self
@@ -164,6 +166,8 @@ class FuzzyARTMAP(object):
         self.w = w_consolidated
         self.out_w = out_w_consolidated
 
+        return self
+
     def melding(self, modul_b_additional):
         """
         Function for melding "self" with the given additional module B
@@ -174,3 +178,5 @@ class FuzzyARTMAP(object):
         """
         self.w = np.append(self.w, modul_b_additional.w, axis=0)
         self.out_w = np.append(self.out_w, modul_b_additional.out_w, axis=0)
+
+        return self

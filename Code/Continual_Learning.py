@@ -43,10 +43,11 @@ def continual_learning_fun(modul_b, no_classes, no_groups, feature_list_train, l
     random.shuffle(classes)
     print(classes)
 
+    group_size = int(no_classes / no_groups)
+
     for i in range(no_groups):  # - 1, -1, -1):
         print("------ Training Group {} of {} ------".format(int(i+1), no_groups))
 
-        group_size = int(no_classes/no_groups)
         idx = i*group_size
 
         tmp_features = []
