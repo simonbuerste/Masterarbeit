@@ -61,9 +61,9 @@ class FuzzyARTMAP(object):
         dot_product = np.dot(self.w, x)
         matching = dot_product/(w_normed*x_normed)
 
-        # For more than one internal representation, "Nothing I know" mechanism is used
-        if (len(matching) > 1) and (y is None):
-            rho = np.minimum(_s * np.mean(matching), _s * _rho)
+        # For more than one internal Category representation, "Nothing I know" mechanism is used
+        if (len(np.unique(self.out_w, axis=0)) > 1) and (y is None):
+            rho = _s * np.mean(matching)  # np.minimum(_s * np.mean(matching), _s * _rho)
         else:
             rho = _rho
 

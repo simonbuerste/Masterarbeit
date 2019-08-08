@@ -118,8 +118,8 @@ def confusion_matrix_plot(label_list_test_merged, pred, params):
         # Save Figures to given directory
         if params["save"] is True:
             filename = os.path.join(params["dir2save"], "Confusion_Matrix_Device_{}".format(i+1))
-        plt.savefig(filename+".png")
-        plt.savefig(filename+".svg")
+            plt.savefig(filename+".png")
+            plt.savefig(filename+".svg")
 
     plt.show(block=False)
 
