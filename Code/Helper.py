@@ -9,7 +9,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-
+tf.compat.v1.enable_eager_execution()
 
 def data_separation_train(modul_a, data_train, params):
     """
@@ -23,7 +23,8 @@ def data_separation_train(modul_a, data_train, params):
         feature_list_train:     The extracted Features from training data separated by each class
         label_list_train:       The corresponding Labels to the training data
     """
-
+    print(tf.executing_eagerly())
+    
     train_img_per_class = params["train_img_per_class"]
     no_classes = params["no_classes"]
 
@@ -40,6 +41,7 @@ def data_separation_train(modul_a, data_train, params):
             break
 
         # Just add the data to the list if not enough data for this class is stored yet
+        # print(tf.executing_eagerly())
         label_scalar = (np.array(label)).item()
         if i[label_scalar] < train_img_per_class:
             features = modul_a.predict(img, steps=1)
