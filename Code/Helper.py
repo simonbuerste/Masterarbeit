@@ -8,34 +8,28 @@ import os
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
+import tensorflow as tf
 
 
-def data_separation(modul_a, data_train, data_test, params):
+def data_separation_train(modul_a, data_train, params):
     """
     Data is separated and the features are extracted for each class depending on the desired number of training/test
     images to incremental learning the different classes easily in the next pipeline steps
     # Arguments
         :param modul_a:         Feature Extraction module
         :param data_train:      The Training dataset containing images and labels
-        :param data_test:       The Test dataset containing images and labels
         :param params           Dictionary containing all parameters
     # Returns
         feature_list_train:     The extracted Features from training data separated by each class
         label_list_train:       The corresponding Labels to the training data
-        feature_list_test:      The extracted Features from test data separated by each class
-        label_list_test:        The corresponding Labels to the test data
     """
 
     train_img_per_class = params["train_img_per_class"]
-    test_img_per_class = params["test_img_per_class"]
     no_classes = params["no_classes"]
 
     # To seperate the data correct, create a nested list with seperat lists for every class
     feature_list_train = [[] for _ in range(no_classes)]
-    feature_list_test = [[] for _ in range(no_classes)]
     label_list_train = [[] for _ in range(no_classes)]
-    label_list_test = [[] for _ in range(no_classes)]
     i = np.zeros((no_classes,), dtype=int)
 
     # Loop over all training data (or until break condition is fullfilled)
@@ -55,7 +49,30 @@ def data_separation(modul_a, data_train, data_test, params):
             label_list_train[label_scalar].append(label)
             i[label_scalar] += 1
 
+    return feature_list_train, label_list_train
+
+
+def data_separation_test(modul_a, data_test, params):
+    """
+    Data is separated and the features are extracted for each class depending on the desired number of training/test
+    images to incremental learning the different classes easily in the next pipeline steps
+    # Arguments
+        :param modul_a:         Feature Extraction module
+        :param data_test:       The Test dataset containing images and labels
+        :param params           Dictionary containing all parameters
+    # Returns
+        feature_list_test:      The extracted Features from test data separated by each class
+        label_list_test:        The corresponding Labels to the test data
+    """
+
+    test_img_per_class = params["test_img_per_class"]
+    no_classes = params["no_classes"]
+
+    # To seperate the data correct, create a nested list with seperat lists for every class
+    feature_list_test = [[] for _ in range(no_classes)]
+    label_list_test = [[] for _ in range(no_classes)]
     i = np.zeros((no_classes,), dtype=int)
+
     # Loop over all test data (or until break condition is fullfilled)
     for img, label in data_test:
         # Break if for every class enough training samples are stored already
@@ -73,7 +90,7 @@ def data_separation(modul_a, data_train, data_test, params):
             label_list_test[label_scalar].append(label)
             i[label_scalar] += 1
 
-    return feature_list_train, label_list_train, feature_list_test, label_list_test
+    return feature_list_test, label_list_test
 
 
 def confusion_matrix_plot(label_list_test_merged, pred, params):
@@ -89,7 +106,7 @@ def confusion_matrix_plot(label_list_test_merged, pred, params):
 
     # Create a Confusion Matrix for every Device (if more than one device is selected)
     for i in range(len(label_list_test_merged)):
-        cm = confusion_matrix(y_true=np.asarray(label_list_test_merged[i]), y_pred=pred[i])
+        cm = np.array(tf.math.confusion_matrix(labels=np.asarray(label_list_test_merged[i]), predictions=pred[i]))
         cm = cm / cm.sum(axis=1)[:, None]
 
         fig, ax = plt.subplots()
@@ -101,7 +118,7 @@ def confusion_matrix_plot(label_list_test_merged, pred, params):
                yticklabels=np.unique(label_list_test_merged[i]),
                title='Confusion Matrix of L DNN Algorithm for Device {}'.format(i+1))
         ax.set_xticks(np.arange(cm.shape[1]+1)-.5, minor=True)
-        ax.set_yticks(np.arange(cm.shape[1]+1)-.5, minor=True)
+        ax.set_yticks(np.arange(cm.shape[0]+1)-.5, minor=True)
         ax.grid(which='minor', color='k', linestyle='-', linewidth=1)
         # Loop over data dimensions and create text annotations.
         fmt = '.2f'
@@ -121,7 +138,7 @@ def confusion_matrix_plot(label_list_test_merged, pred, params):
             plt.savefig(filename+".png")
             plt.savefig(filename+".svg")
 
-    plt.show(block=False)
+    # plt.show(block=False)
 
 
 def accuracy_plot(accuracy, params):
@@ -158,5 +175,5 @@ def accuracy_plot(accuracy, params):
         plt.savefig(filename+".png")
         plt.savefig(filename+".svg")
 
-    plt.show()
-
+    # plt.show()
+    plt.close('all')

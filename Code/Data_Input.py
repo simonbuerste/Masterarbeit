@@ -121,7 +121,7 @@ def input_fn(dataset, visu):
         plt.show()
         print("Label: %d" % label.numpy())
 
-    data_train = data_train.repeat().shuffle(128).batch(1)
+    data_train = data_train.repeat().shuffle(1000).batch(1)
     data_test = data_test.batch(1)
 
     return data_train, data_test
