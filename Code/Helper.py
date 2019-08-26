@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 tf.compat.v1.enable_eager_execution()
 
+
 def data_separation_train(modul_a, data_train, params):
     """
     Data is separated and the features are extracted for each class depending on the desired number of training/test
@@ -23,7 +24,6 @@ def data_separation_train(modul_a, data_train, params):
         feature_list_train:     The extracted Features from training data separated by each class
         label_list_train:       The corresponding Labels to the training data
     """
-    print(tf.executing_eagerly())
     
     train_img_per_class = params["train_img_per_class"]
     no_classes = params["no_classes"]
@@ -95,7 +95,7 @@ def data_separation_test(modul_a, data_test, params):
     return feature_list_test, label_list_test
 
 
-def confusion_matrix_plot(label_list_test_merged, pred, params):
+def confusion_matrix_plot(label_list_test_merged, prediction_list, params):
     """
     Plot of the Confusion Matrix for evaluation of Classification Performance per Class
     # Arguments
@@ -108,7 +108,15 @@ def confusion_matrix_plot(label_list_test_merged, pred, params):
 
     # Create a Confusion Matrix for every Device (if more than one device is selected)
     for i in range(len(label_list_test_merged)):
-        cm = np.array(tf.math.confusion_matrix(labels=np.asarray(label_list_test_merged[i]), predictions=pred[i]))
+        # Calculation and Generation of Confusion Matrix
+        predictions = np.unique(prediction_list[i])
+        labels = np.unique(label_list_test_merged[i])
+        cm = np.zeros((len(labels), len(predictions)))
+        for (pred, label) in zip(prediction_list[i], np.asarray(label_list_test_merged[i])):
+            idx_label = np.where(label == labels)
+            idx_pred = np.where(pred == predictions)
+            cm[idx_label, idx_pred] += 1
+        # Normalization of Confusion Matrix
         cm = cm / cm.sum(axis=1)[:, None]
 
         fig, ax = plt.subplots()
@@ -168,6 +176,8 @@ def accuracy_plot(accuracy, params):
     ax.set_ylabel("Classification Accuracy", fontsize=12)
 
     ax.plot(x_axis, accuracy, '-o')
+    if np.size(accuracy, 1) == 2:
+        ax.legend(["Edge Device 1", "Edge Device 2"], loc='best')
     ax.grid()
     fig.tight_layout()
 
