@@ -61,11 +61,12 @@ def continual_learning_fun(modul_b, no_classes, no_groups, feature_list_train, l
             label_list_test_merged = label_list_test_merged + label_list_test[classes[j]]
 
         # A Group can be selected which should not be trained
-        if i != 10:
-            modul_b.train(np.array(tmp_features), np.asarray(tmp_labels)[:, 0], epochs=1)
+        # if i != 10:
+        modul_b.train(np.array(tmp_features), np.asarray(tmp_labels)[:, 0], epochs=1)
 
         # If desired, Consolidation of Weights for all classes can be done here.
-        # net.consolidation()
+        #if i == (no_groups-1):
+        #    modul_b.consolidation()
 
         print(modul_b.w.shape)
 
