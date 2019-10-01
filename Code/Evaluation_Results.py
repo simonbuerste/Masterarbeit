@@ -4,7 +4,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
-directory = "C:/Users/simon/Documents/Uni_Stuttgart/Masterarbeit/Results/CL_Final/imagenet10"
+directory = "C:/Users/simon/Documents/Uni_Stuttgart/Masterarbeit/Results/CL_Final/split-mnist_full"
 list_dir = next(os.walk(directory))[1]
 summary = []
 
@@ -21,6 +21,8 @@ for i, result_folder in enumerate(list_dir):
         eval_params = json.load(eval_params_file)
 
     tmp = {
+        #"Accuracy_melded":          eval_metrics["Accuracy melded"],
+        "Accuracy":                 np.asarray(eval_metrics["Accuracy"]),
         "Accuracy_Final":           np.asarray(eval_metrics["Accuracy"])[-1],
         "Memory Modul A":           eval_metrics["Memory Module A"],
         "Memory Modul B":           eval_metrics["Memory Module B"],
@@ -31,32 +33,41 @@ for i, result_folder in enumerate(list_dir):
 
     if i == 0:
         repetitions = eval_params["no_repetitions"]
+        no_groups = eval_params["no_groups"]
 
     summary.append(tmp)
+
+title = "Klassifikations Genauigkeit bei Split-MNIST"
+# title = "Speicherbedarf Modul B Split-MNIST"
+# title = "Klassifikations Genauigkeit bei ImageNet-10"
+# title = "Speicherbedarf Modul B ImageNet-10"
+y_label = "Klassifikations Genauigkeit in %"
+# y_label = "Speicherbedarf in MB"
+save_name = "Accuracy"
+# save_name = "Memory_Module_B"
 
 if len(hyperparameters) == 1:
     param_values = np.unique([d[hyperparameters[0]] for d in summary])
 
     idx_counter = np.zeros((len(param_values),), dtype=int)
     plot_values = np.zeros((len(param_values), repetitions))
-    for d in summary:
+    memory = np.zeros((len(param_values), repetitions))
+    acc = np.zeros((repetitions, no_groups))
+    for i, d in enumerate(summary):
         idx = np.where(param_values == d[hyperparameters[0]])
         idx_counter[idx] += 1
-        # plot_values[idx] += d["Memory Modul B"]/1000000
-        plot_values[idx, idx_counter[idx]-1] += d["Accuracy_Final"]
+        memory[idx, idx_counter[idx]-1] += d["Memory Modul B"]/1000000
+        plot_values[idx, idx_counter[idx]-1] += d["Accuracy_Final"] # d["Accuracy_melded"]
+        acc[i, :] = np.transpose(d["Accuracy"])
 
     mu = np.mean(plot_values, axis=1)
     std = np.std(plot_values, axis=1)
-    title = "Classification Accuracy on ImageNet-10"
-    # title = "Classification Accuracy on ImageNet-10"
-    y_label = "Classification Accuracy in %"
-    # y_label = "Memory Consumption Module B in MB"
-    save_name = "Accuracy"
-    # save_name = "Memory_Module_B"
+    memory_mu = np.mean(memory, axis=1)
+    acc_mean = np.mean(acc, axis=0)
 
     fig, ax = plt.subplots()
     ax.plot(param_values, mu, linestyle='-', marker='o')
-    ax.set(#xscale='log',
+    ax.set(xscale='log',
            xlabel='%s' % hyperparameters[0],
            ylabel=y_label,
            yticks=np.arange(0, 1.1, 0.1),
@@ -72,7 +83,7 @@ if len(hyperparameters) == 1:
     # Build the plot
     fig, ax = plt.subplots()
     ax.bar(param_values, mu, yerr=std, align='center', ec="k", ecolor='black', capsize=5, width=0.25*np.array(param_values))
-    ax.set(#xscale='log',
+    ax.set(xscale='log',
            xlabel='%s' % hyperparameters[0],
            ylabel=y_label,
            yticks=np.arange(0, 1.1, 0.1),
@@ -87,9 +98,11 @@ if len(hyperparameters) == 1:
 
     # Summarize Metrics over multiple runs
     metrics_merged = {
-        "parameter_values": param_values.tolist(),
-        "Accuracy Mean":    mu.tolist(),
-        "Accuracy Std":     std.tolist()
+        "parameter_values":         param_values.tolist(),
+        "Accuracy Mean":            mu.tolist(),
+        "Accuracy Std":             std.tolist(),
+        "Accuracy Training Steps":  acc_mean.tolist(),
+        "Memory Module B":          memory_mu.tolist()
     }
 
     # Write Parameters to Json to check impact of parameter values on results
@@ -104,8 +117,8 @@ elif len(hyperparameters) == 2:
     confusion_matrix = np.zeros((len(alpha_values), len(rho_values)))
 
     for d in summary:
-        idx0 = np.where(alpha_values == d["Alpha"])
-        idx1 = np.where(rho_values == d["Rho"])
+        idx0 = np.where(alpha_values == d[hyperparameters[0]])
+        idx1 = np.where(rho_values == d[hyperparameters[1]])
         confusion_matrix[idx0, idx1] += d["Accuracy_Final"]# d["Memory Modul B"]/1000000
 
     confusion_matrix = confusion_matrix / repetitions
@@ -118,7 +131,7 @@ elif len(hyperparameters) == 2:
            yticks=np.arange(confusion_matrix.shape[0]),
            xticklabels=np.around(rho_values, decimals=1), yticklabels=np.around(alpha_values, decimals=1),
            # title='Memory Module B in MB',
-           title='Classification Accuracy in %',
+           title=title,
            xlabel='Rho', ylabel='Alpha')
     ax.set_xticks(np.arange(confusion_matrix.shape[1] + 1) - .5, minor=True)
     ax.set_yticks(np.arange(confusion_matrix.shape[0] + 1) - .5, minor=True)
@@ -132,8 +145,8 @@ elif len(hyperparameters) == 2:
                     ha="center", va="center",
                     color="white" if confusion_matrix[k, j] > thresh else "black")
     fig.tight_layout()
-    # filename = os.path.join(directory, "Memory_Module_B_Grid_Search")
-    filename = os.path.join(directory, "Confusion_Matrix_Grid_Search")
+    # filename = os.path.join(directory, save_name+"_Confusion_Matrix")
+    filename = os.path.join(directory, save_name+"_Confusion_Matrix")
     plt.savefig(filename + ".png")
     plt.savefig(filename + ".svg")
 

@@ -139,10 +139,10 @@ class FuzzyARTMAP(object):
                 labels[i] = np.argmax(self.out_w[category])
             else:
                 # Else, "Nothing I know"-Mechanism is active and User has to give the Category Label
-                print("{} tes Sample der Testdaten".format(i))
-                label = int(input("Kategorie unbekannt. Geben Sie die Kategorie ein: "))
-                self._add_category(sample, label)
-                labels[i] = category
+                # print("{} tes Sample der Testdaten".format(i))
+                # label = int(input("Kategorie unbekannt. Geben Sie die Kategorie ein: "))
+                # self._add_category(sample, label)
+                labels[i] = labels[i-1]  # category
         return labels
 
     def consolidation(self):
@@ -157,11 +157,11 @@ class FuzzyARTMAP(object):
         unique_classes = np.unique(self.out_w, axis=0)
         out_w_consolidated = np.zeros_like(unique_classes, dtype=int)
         w_consolidated = np.zeros((unique_classes.shape[0], self.w.shape[1]))
-        for i in range(self.n_classes):
-            idx = np.argwhere(self.out_w[:, i] == 1)
-            if idx.size != 0:
-                w_consolidated[i, :] = np.mean(self.w[idx, :], axis=0)
-                out_w_consolidated[i, i] = 1
+        for i in range(len(unique_classes)):
+            idx = np.where(np.all(self.out_w == unique_classes[i, :], axis=1))
+            if len(idx) != 0:
+                w_consolidated[i, :] = np.mean(self.w[idx[0], :], axis=0)
+                out_w_consolidated[i, :] = unique_classes[i, :]
 
         self.w = w_consolidated
         self.out_w = out_w_consolidated

@@ -1,4 +1,6 @@
 import os
+import numpy as np
+import scipy.io
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import matplotlib.pyplot as plt
@@ -6,6 +8,87 @@ import matplotlib.pyplot as plt
 """
 The Data Input is handled here. All necessary steps for preparing the Data for the Network is done
 """
+
+
+def read_labels_mat(filename):
+    """
+    Reads the synsets for ImageNet from a .mat-File
+    :param filename: Directory of the .mat-File
+    :return: List of Synsets for mapping them to a label
+    """
+    labels = scipy.io.loadmat(filename)
+    mapping = labels['synsets']
+    synsets = []
+    for idx, m in enumerate(mapping):
+        synsets.append(mapping[idx][0][1][0])
+    return synsets
+
+
+def read_labels_txt(filename):
+    """
+    Reads a .txt-Label File
+    :param filename: Directory of the .txt-Labelfile
+    :return: The Labels as a numpy Array
+    """
+    file = open(filename, "r")
+    labels = []
+    for line in file:
+        labels.append(line)
+    return np.asarray(labels, dtype=int)
+
+
+def _process_image(filename, label):
+    """
+    Reads the image from the file
+    :param filename: Filename of the images
+    :param label:    Label for each image
+    :return: Image/Label Combination to store in a dataset
+    """
+    # Read the image file.
+    height = 224
+    width = 224
+    img_raw = tf.io.read_file(filename)
+    jpeg_img = tf.image.decode_jpeg(img_raw, channels=3)
+    jpeg_img_resized = tf.image.resize(jpeg_img, (height, width))
+
+    return jpeg_img_resized, label
+
+
+def _process_dataset(all_train_img, all_train_label, all_test_img, all_test_label):
+    """
+    This Function processes an image dataset from local PC
+    :param all_train_img:   Directory where all training images are stored
+    :param all_train_label: File where the training labels (or mapping of folder name to label) are stored
+    :param all_test_img:    Directory where all test images are stored
+    :param all_test_label:  File where the test labels are stored
+    :return: An training and test dataset
+    """""
+    # Read all training and test images and set the correct path
+    train_files = tf.io.gfile.listdir(all_train_img)
+    test_files = tf.io.gfile.listdir(all_test_img)
+    all_train_class_path = [os.path.join(all_train_img, f) for f in train_files]
+    all_test_img_path = [os.path.join(all_test_img, f) for f in test_files]
+    # Since Labels start at 1, substract -1 for correct indices with starting '0'
+    label_np_test = read_labels_txt(all_test_label) - 1
+    synsets_np_train = read_labels_mat(all_train_label)
+
+    all_train_img_path = []
+    label_np_train = []
+    for folder in all_train_class_path:
+        img_class_files = tf.io.gfile.listdir(folder)
+        synset = os.path.basename(os.path.normpath(folder))
+        label_train = synsets_np_train.index(synset)
+        for f in img_class_files:
+            all_train_img_path.append(os.path.join(folder, f))
+            label_np_train.append(label_train)
+
+    # Create the Datasets for training and test images with corresponding labels
+    path_ds_train = tf.data.Dataset.from_tensor_slices((all_train_img_path, label_np_train))
+    img_label_ds_train = path_ds_train.map(_process_image)
+    path_ds_test = tf.data.Dataset.from_tensor_slices((all_test_img_path, label_np_test))
+    img_label_ds_test = path_ds_test.map(_process_image)
+
+    return img_label_ds_train, img_label_ds_test
 
 
 def extract_fn(tfrecord):
@@ -87,15 +170,25 @@ def input_fn(dataset, visu):
         data_train = tfds.load(name=dataset, split=tfds.Split.TRAIN, as_supervised=True)
         data_test = tfds.load(name=dataset, split=tfds.Split.TEST, as_supervised=True)
     except:
-        dataset_folder = 'C:/Users/simon/tensorflow_datasets'
-        filename_train = os.path.join(dataset_folder, dataset, 'train.tfrecords')
-        filename_test = os.path.join(dataset_folder, dataset, 'test.tfrecords')
+        dataset_folder = 'C:/Users/st158084/tensorflow_datasets'
+        if dataset == 'imagenet10':
+            filename_train = os.path.join(dataset_folder, dataset, 'train.tfrecords')
+            filename_test = os.path.join(dataset_folder, dataset, 'test.tfrecords')
 
-        data_train = tf.data.TFRecordDataset([filename_train])
-        data_train = data_train.map(extract_fn)
+            data_train = tf.data.TFRecordDataset([filename_train])
+            data_test = tf.data.TFRecordDataset([filename_test])
+            data_train = data_train.map(extract_fn)
+            data_test = data_test.map(extract_fn)
+        elif dataset == 'imagenet':
+            all_train_img = os.path.join(dataset_folder, dataset, 'img_train')
+            all_train_label = os.path.join(dataset_folder, dataset, 'ILSVRC2012_devkit_t12/data/meta.mat')
+            all_test_img = os.path.join(dataset_folder, dataset, 'img_val')
+            all_test_label = os.path.join(dataset_folder, dataset, 'ILSVRC2012_validation_ground_truth.txt')
 
-        data_test = tf.data.TFRecordDataset([filename_test])
-        data_test = data_test.map(extract_fn)
+            data_train, data_test = _process_dataset(all_train_img, all_train_label, all_test_img, all_test_label)
+        else:
+            print('No such Dataset found')
+            return
 
     # For Visualization of image before/after data augmentation
     if visu is True:
@@ -121,7 +214,7 @@ def input_fn(dataset, visu):
         plt.show()
         print("Label: %d" % label.numpy())
 
-    data_train = data_train.repeat().shuffle(1000, reshuffle_each_iteration=True).batch(1)
+    data_train = data_train.shuffle(1000, reshuffle_each_iteration=True).repeat().batch(1)
     data_test = data_test.batch(1)
 
     return data_train, data_test

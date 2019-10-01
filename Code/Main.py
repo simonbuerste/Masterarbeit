@@ -21,29 +21,25 @@ from Helper import data_separation_test
 from Helper import accuracy_plot
 
 # Parameters for the Pipeline are set here
-
 params = {
     'save':                 True,
-    'dir2save':             'C:/Users/simon/Documents/Uni_Stuttgart/Masterarbeit/Results/no_train_img/split_mnist_val_data',
-    'dataset':              "imagenet10",
-    'no_classes':           10,
-    'no_groups':            5,
-    'train_img_per_class':  20,
-    'test_img_per_class':   1000,
+    'dir2save':             'C:/Users/st158084/Results/imagenet2012',
+    'dataset':              "imagenet",
+    'no_classes':           1000,
+    'no_groups':            10,
+    'train_img_per_class':  1,
+    'test_img_per_class':   1,
     'no_edge_devices':      1,
     'test_case':            "continual",  # "distributed"#
-    'no_repetitions':       5,
+    'no_repetitions':       1,
     'modul_b_alpha':        0.2,
     'modul_b_rho':          0.5,
     'modul_b_s':            1.05,
     'modul_b_epsilon':      0.001
 }
 
-# Input Function is called which provides the training and test data for the desired Dataset
-data_train, data_test = input_fn(dataset=params["dataset"], visu=False)
-
 # The Feature Extraction Module A is called and created/downloaded with the corresponding image size
-modulA = modul_a(image_size=96)
+modulA = modul_a(image_size=224)
 
 # Data is separated per Class and the features are extracted with Module A
 # Done one time for the test data to have same test data for evaluation
@@ -51,15 +47,15 @@ modulA = modul_a(image_size=96)
 
 dir_orig = params["dir2save"]
 
-train_img_per_class = [6000]
+no_train_img = [1]
 # Nested for-loops for Hyperparameter Optimization
-for a in train_img_per_class:
+for a in no_train_img:
     params["train_img_per_class"] = a
     # For-loop for number of repetitions to get reliable results
     for _ in range(params["no_repetitions"]):
         if params["save"] is True:
             # get current time as string for saving of model
-            timestring = strftime("%Y-%m-%d_%H-%M-%S", gmtime()) + "_No_Train_Img_{}".format(a)
+            timestring = strftime("%Y-%m-%d_%H-%M-%S", gmtime()) # + "_No_Train_Img_{}".format(a)
             params["dir2save"] = os.path.join(dir_orig, timestring)
             # Create directory for model combination if not existens
             if not os.path.exists(params["dir2save"]):
@@ -68,6 +64,9 @@ for a in train_img_per_class:
             filename_params = os.path.join(params["dir2save"], "params.json")
             with open(filename_params, "w") as params_file:
                 json.dump(params, params_file, sort_keys=True)
+
+        # Input Function is called which provides the training and test data for the desired Dataset
+        data_train, data_test = input_fn(dataset=params["dataset"], visu=False)
 
         # Data is separated per Class and the features are extracted with Module A
         # Repeat for every repetition for the training data to see impact of choice of training data
