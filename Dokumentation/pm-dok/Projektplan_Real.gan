@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2019-04-01" view-index="0" gantt-divider-location="517" resource-divider-location="300" version="2.8.10" locale="de">
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2019-04-01" view-index="0" gantt-divider-location="471" resource-divider-location="300" version="2.8.10" locale="de">
     <description/>
-    <view zooming-state="default:10" id="gantt-chart">
-        <field id="tpd3" name="Vorgang" width="342" order="0"/>
-        <field id="tpd4" name="Anfang" width="74" order="1"/>
-        <field id="tpd5" name="Ende" width="82" order="2"/>
-        <timeline><![CDATA[29,55,83,139,134,36,46,120,185,73,6,124,161,125,54]]></timeline>
+    <view zooming-state="default:9" id="gantt-chart">
+        <field id="tpd3" name="Vorgang" width="309" order="0"/>
+        <field id="tpd4" name="Anfang" width="68" order="1"/>
+        <field id="tpd5" name="Ende" width="75" order="2"/>
+        <timeline><![CDATA[36,125,46,6,139,83,73,185,134,55,124,29,120,161,54]]></timeline>
         <option id="color.recent"><![CDATA[#000000 #0000ff #00ff00]]></option>
     </view>
     <view id="resource-table">
@@ -35,7 +35,7 @@
             <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
             <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
         </taskproperties>
-        <task id="0" name="Konzeptentwicklung" color="#000000" meeting="false" start="2019-04-29" duration="125" complete="42" thirdDate="2019-05-06" thirdDate-constraint="0" expand="true">
+        <task id="0" name="Konzeptentwicklung" color="#000000" meeting="false" start="2019-04-29" duration="144" complete="96" thirdDate="2019-05-06" thirdDate-constraint="0" expand="true">
             <task id="6" name="Start der Masterarbeit" color="#8cb6ce" meeting="true" start="2019-04-29" duration="0" complete="0" thirdDate="2019-04-01" thirdDate-constraint="0" expand="true">
                 <depend id="26" type="2" difference="0" hardness="Strong"/>
                 <depend id="27" type="2" difference="0" hardness="Strong"/>
@@ -83,54 +83,52 @@
                     <depend id="113" type="2" difference="0" hardness="Strong"/>
                 </task>
             </task>
-            <task id="113" name="Prototypingphase" color="#000000" meeting="false" start="2019-07-01" duration="71" complete="0" thirdDate="2019-04-22" thirdDate-constraint="0" expand="true">
-                <task id="120" name="Implementierung und Inbetriebnahme" color="#8cb6ce" meeting="false" start="2019-07-01" duration="30" complete="0" thirdDate="2019-07-04" thirdDate-constraint="0" expand="true">
+            <task id="113" name="Prototypingphase" color="#000000" meeting="false" start="2019-07-01" duration="90" complete="98" thirdDate="2019-04-22" thirdDate-constraint="0" expand="true">
+                <task id="120" name="Implementierung und Inbetriebnahme" color="#8cb6ce" meeting="false" start="2019-07-01" duration="45" complete="100" thirdDate="2019-07-04" thirdDate-constraint="0" expand="true">
                     <depend id="124" type="2" difference="0" hardness="Strong"/>
-                </task>
-                <task id="124" name="Evaluierung und Bewertung" color="#8cb6ce" meeting="false" start="2019-08-05" duration="17" complete="0" thirdDate="2019-07-04" thirdDate-constraint="0" expand="true">
                     <depend id="125" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="124" name="Evaluierung und Bewertung" color="#8cb6ce" meeting="false" start="2019-08-22" duration="40" complete="100" thirdDate="2019-07-04" thirdDate-constraint="0" expand="true">
                     <depend id="130" type="2" difference="0" hardness="Strong"/>
                 </task>
-                <task id="130" name="Prototyping- und Abnahme-Review" color="#8cb6ce" meeting="true" start="2019-08-24" duration="0" complete="0" thirdDate="2019-07-04" thirdDate-constraint="0" expand="true"/>
-                <task id="125" name="Optional: Aufbau Demonstrator" color="#0000ff" meeting="false" start="2019-08-24" duration="24" complete="0" thirdDate="2019-07-04" thirdDate-constraint="0" expand="true">
+                <task id="130" name="Prototyping- und Abnahme-Review" color="#8cb6ce" meeting="true" start="2019-10-08" duration="0" complete="0" thirdDate="2019-07-04" thirdDate-constraint="0" expand="true">
+                    <depend id="170" type="2" difference="0" hardness="Strong"/>
+                    <depend id="177" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="125" name="Optional: Aufbau Demonstrator" color="#0000ff" meeting="false" start="2019-08-22" duration="45" complete="100" thirdDate="2019-07-04" thirdDate-constraint="0" expand="true">
                     <depend id="134" type="2" difference="0" hardness="Strong"/>
                 </task>
-                <task id="134" name="Prototyping- und Abnahme-Review (Demonstrator)" color="#8cb6ce" meeting="true" start="2019-09-21" duration="0" complete="0" thirdDate="2019-07-04" thirdDate-constraint="0" expand="true">
+                <task id="134" name="Prototyping- und Abnahme-Review (Demonstrator)" color="#8cb6ce" meeting="true" start="2019-10-14" duration="0" complete="0" thirdDate="2019-07-04" thirdDate-constraint="0" expand="true">
                     <depend id="170" type="2" difference="0" hardness="Strong"/>
                 </task>
             </task>
         </task>
-        <task id="155" name="Projektmanagement" color="#000000" meeting="false" start="2019-04-29" duration="157" complete="4" thirdDate="2019-04-01" thirdDate-constraint="0" expand="true">
+        <task id="155" name="Projektmanagement" color="#000000" meeting="false" start="2019-04-29" duration="157" complete="98" thirdDate="2019-04-01" thirdDate-constraint="0" expand="true">
             <task id="158" name="Projektplanung" color="#8cb6ce" meeting="false" start="2019-04-29" duration="8" complete="100" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true">
                 <depend id="161" type="2" difference="0" hardness="Strong"/>
             </task>
             <task id="161" name="Projektplan" color="#8cb6ce" meeting="true" start="2019-05-08" duration="0" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true">
                 <depend id="165" type="2" difference="0" hardness="Strong"/>
             </task>
-            <task id="165" name="Projektkontrolle" color="#8cb6ce" meeting="false" start="2019-05-08" duration="118" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true"/>
-            <task id="170" name="Projektabschluß" color="#8cb6ce" meeting="false" start="2019-09-21" duration="4" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true">
-                <depend id="177" type="2" difference="0" hardness="Strong"/>
-            </task>
-            <task id="177" name="Vortrag vorbereiten" color="#8cb6ce" meeting="false" start="2019-09-26" duration="5" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true">
+            <task id="165" name="Projektkontrolle" color="#8cb6ce" meeting="false" start="2019-05-08" duration="135" complete="100" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true"/>
+            <task id="170" name="Projektabschluß" color="#8cb6ce" meeting="false" start="2019-10-14" duration="5" complete="100" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true"/>
+            <task id="177" name="Vortrag vorbereiten" color="#8cb6ce" meeting="false" start="2019-10-08" duration="7" complete="100" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true">
                 <depend id="185" type="2" difference="0" hardness="Strong"/>
             </task>
-            <task id="185" name="Vortrag" color="#8cb6ce" meeting="true" start="2019-10-02" duration="0" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true">
+            <task id="185" name="Vortrag" color="#8cb6ce" meeting="true" start="2019-10-16" duration="0" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true">
                 <depend id="189" type="2" difference="0" hardness="Strong"/>
             </task>
-            <task id="189" name="Ausarbeitung" color="#8cb6ce" meeting="false" start="2019-10-02" duration="13" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true">
-                <depend id="194" type="2" difference="0" hardness="Strong"/>
-            </task>
-            <task id="194" name="Puffer" color="#8cb6ce" meeting="false" start="2019-10-17" duration="10" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true">
+            <task id="189" name="Ausarbeitung" color="#8cb6ce" meeting="false" start="2019-10-16" duration="11" complete="100" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true">
                 <depend id="199" type="2" difference="0" hardness="Strong"/>
             </task>
             <task id="199" name="Ende Masterarbeit" color="#8cb6ce" meeting="true" start="2019-10-29" duration="0" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true"/>
         </task>
-        <task id="139" name="Qualitätssicherung" color="#000000" meeting="false" start="2019-04-29" duration="158" complete="0" thirdDate="2019-06-01" thirdDate-constraint="0" expand="true">
-            <task id="143" name="Prozessprüfung" color="#8cb6ce" meeting="false" start="2019-04-29" duration="158" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true"/>
+        <task id="139" name="Qualitätssicherung" color="#000000" meeting="false" start="2019-04-29" duration="158" complete="100" thirdDate="2019-06-01" thirdDate-constraint="0" expand="true">
+            <task id="143" name="Prozessprüfung" color="#8cb6ce" meeting="false" start="2019-04-29" duration="158" complete="100" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true"/>
         </task>
-        <task id="146" name="Konfigurationsmanagement" color="#000000" meeting="false" start="2019-04-29" duration="158" complete="0" thirdDate="2019-04-01" thirdDate-constraint="0" expand="true">
-            <task id="149" name="Konfigurationsverwaltung" color="#8cb6ce" meeting="false" start="2019-04-29" duration="158" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true"/>
-            <task id="151" name="Datensicherung" color="#8cb6ce" meeting="false" start="2019-04-29" duration="158" complete="0" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true"/>
+        <task id="146" name="Konfigurationsmanagement" color="#000000" meeting="false" start="2019-04-29" duration="158" complete="100" thirdDate="2019-04-01" thirdDate-constraint="0" expand="true">
+            <task id="149" name="Konfigurationsverwaltung" color="#8cb6ce" meeting="false" start="2019-04-29" duration="158" complete="100" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true"/>
+            <task id="151" name="Datensicherung" color="#8cb6ce" meeting="false" start="2019-04-29" duration="158" complete="100" thirdDate="2019-04-29" thirdDate-constraint="0" expand="true"/>
         </task>
     </tasks>
     <resources/>
